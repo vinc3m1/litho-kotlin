@@ -66,7 +66,7 @@ private fun ChildHolder.container(
 }
 
 /**
- * Base implementation from components (non containers).
+ * Base implementation for components (non containers).
  * We have to differentiate here because Litho's Builder and ContainerBuilder types are different.
  * @param c the {@link ComponentContext} needed to create this builder.
  * @param create the creator function reference. E.g. Text::create.
