@@ -4,7 +4,7 @@ Kotlin DSL for Litho ComponentLayout Builders.
 # Usage
 
 ## Import
-Just copy litho.kt into your project. I may look into a proper Maven Central release in the future.
+Just copy [`litho.kt`](https://raw.githubusercontent.com/vinc3m1/litho-kotlin/master/litho.kt) into your project under `com/makeramen/litho`. I may look into a proper Maven Central release in the future.
 
 ## Example
 Root element must be a `layout`, this creates a `ComponentLayout` to be returned from an `@OnCreateLayout` function.
