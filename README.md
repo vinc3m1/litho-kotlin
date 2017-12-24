@@ -9,6 +9,9 @@ Just copy [`litho.kt`](https://raw.githubusercontent.com/vinc3m1/litho-kotlin/ma
 ## Example
 
 ```kotlin
+@LayoutSpec
+object ExampleComponentSpec {
+
   @OnCreateLayout
   fun onCreateLayout(c: ComponentContext): ComponentLayout = layout { // Root element must be a layout, returns a ComponentLayout
     column(c) { // Init builders by passing in the context
@@ -29,4 +32,5 @@ Just copy [`litho.kt`](https://raw.githubusercontent.com/vinc3m1/litho-kotlin/ma
       }
     }
   }
+}
 ```
