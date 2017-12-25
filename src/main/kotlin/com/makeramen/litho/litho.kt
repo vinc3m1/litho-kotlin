@@ -56,7 +56,7 @@ fun layout(init: ChildHolder.() -> Unit): ComponentLayout {
  * @param create the creator function reference. E.g. Row::create
  * @param init the DSL builder lambda.
  */
-private fun ChildHolder.container(
+fun ChildHolder.container(
     c: ComponentContext,
     create: (c: ComponentContext) -> ComponentLayout.ContainerBuilder,
     init: ComponentLayout.ContainerBuilder.() -> Unit) {
@@ -72,7 +72,7 @@ private fun ChildHolder.container(
  * @param create the creator function reference. E.g. Text::create.
  * @param init the DSL builder lambda.
  */
-private fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> ChildHolder.component(
+fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> ChildHolder.component(
     c: ComponentContext,
     create: (c: ComponentContext) -> B,
     init: B.() -> Unit) {
