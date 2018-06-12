@@ -16,6 +16,7 @@
 package com.makeramen.litho
 
 import com.facebook.litho.*
+import com.facebook.litho.sections.widget.RecyclerCollectionComponent
 import com.facebook.litho.widget.*
 
 @DslMarker
@@ -27,52 +28,29 @@ class ChildHolder {
 }
 
 /**
- * Root wrapper to return a ComponentLayout.
- * @param init the DSL builder lambda. Only one child is allowed in a layout{}.
- */
-fun layout(init: ChildHolder.() -> Unit): ComponentLayout {
-  // Bit of a compromise to maintain recursive type safety.
-  val childHolder = ChildHolder()
-  childHolder.init()
-  assert(childHolder.children.size == 1) { "layout must have exactly one child." }
-  val child = childHolder.children[0]
-  return when (child) {
-    is ComponentLayout.Builder -> {
-      child.build()
-    }
-    is Component.Builder<*, *> -> {
-      child.buildWithLayout()
-    }
-    else -> {
-      throw IllegalArgumentException("layout element must be Component.Builder or ComponentLayout.Builder.")
-    }
-  }
-}
-
-/**
- * Base implementation for containers (row and column).
- * We have to differentiate here because Litho's Builder and ContainerBuilder types are different.
- * @param c the {@link ComponentContext} needed to create this builder.
- * @param create the creator function reference. E.g. Row::create
- * @param init the DSL builder lambda.
- */
-fun ChildHolder.container(
-    c: ComponentContext,
-    create: (c: ComponentContext) -> ComponentLayout.ContainerBuilder,
-    init: ComponentLayout.ContainerBuilder.() -> Unit) {
-  val builder = create(c)
-  builder.init()
-  this.children.add(builder)
-}
-
-/**
- * Base implementation for components (non containers).
- * We have to differentiate here because Litho's Builder and ContainerBuilder types are different.
+ * Base implementation for components.
  * @param c the {@link ComponentContext} needed to create this builder.
  * @param create the creator function reference. E.g. Text::create.
  * @param init the DSL builder lambda.
  */
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> ChildHolder.component(
+@LithoMarker
+fun <B : Component.Builder<B>> component(
+    c: ComponentContext,
+    create: (c: ComponentContext) -> B,
+    init: B.() -> Unit): Component.Builder<B> {
+  val builder = create(c)
+  builder.init()
+  return builder
+}
+
+/**
+ * Base implementation for components as children of containers.
+ * @param c the {@link ComponentContext} needed to create this builder.
+ * @param create the creator function reference. E.g. Text::create.
+ * @param init the DSL builder lambda.
+ */
+@LithoMarker
+fun <B : Component.Builder<B>> ChildHolder.component(
     c: ComponentContext,
     create: (c: ComponentContext) -> B,
     init: B.() -> Unit) {
@@ -86,21 +64,16 @@ fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> ChildHolder.c
  * @param init the DSL builder lambda to add children to.
  */
 @LithoMarker
-fun ComponentLayout.ContainerBuilder.children(init: ChildHolder.() -> Unit) {
+fun <B : Component.ContainerBuilder<B>> Component.ContainerBuilder<B>.children(
+    init: ChildHolder.() -> Unit) {
   val childHolder = ChildHolder()
   childHolder.init()
   for (child in childHolder.children) {
     when (child) {
-      is ComponentLayout -> {
+      is Component -> {
         this.child(child)
       }
-      is ComponentLayout.Builder -> {
-        this.child(child)
-      }
-      is Component<*> -> {
-        this.child(child)
-      }
-      is Component.Builder<*, *> -> {
+      is Component.Builder<*> -> {
         this.child(child)
       }
     }
@@ -110,44 +83,132 @@ fun ComponentLayout.ContainerBuilder.children(init: ChildHolder.() -> Unit) {
 /** Containers */
 
 @LithoMarker
-fun ChildHolder.column(
-    c: ComponentContext,
-    init: ComponentLayout.ContainerBuilder.() -> Unit) = container(c, Column::create, init)
+fun column(c: ComponentContext, init: Column.Builder.() -> Unit) =
+    component(c, Column::create, init)
 
 @LithoMarker
-fun ChildHolder.row(
-    c: ComponentContext,
-    init: ComponentLayout.ContainerBuilder.() -> Unit) = container(c, Row::create, init)
+fun ChildHolder.column(c: ComponentContext, init: Column.Builder.() -> Unit) =
+    component(c, Column::create, init)
+
+@LithoMarker
+fun row(c: ComponentContext, init: Row.Builder.() -> Unit) =
+    component(c, Row::create, init)
+
+@LithoMarker
+fun ChildHolder.row(c: ComponentContext, init: Row.Builder.() -> Unit) =
+    component(c, Row::create, init)
 
 /** Components */
+
+@LithoMarker
+fun card(c: ComponentContext, init: Card.Builder.() -> Unit) =
+    component(c, Card::create, init)
 
 @LithoMarker
 fun ChildHolder.card(c: ComponentContext, init: Card.Builder.() -> Unit) =
     component(c, Card::create, init)
 
 @LithoMarker
+fun cardClip(c: ComponentContext, init: CardClip.Builder.() -> Unit) =
+    component(c, CardClip::create, init)
+
+@LithoMarker
+fun ChildHolder.cardClip(c: ComponentContext, init: CardClip.Builder.() -> Unit) =
+    component(c, CardClip::create, init)
+
+@LithoMarker
+fun editText(c: ComponentContext, init: EditText.Builder.() -> Unit) =
+    component(c, EditText::create, init)
+
+@LithoMarker
 fun ChildHolder.editText(c: ComponentContext, init: EditText.Builder.() -> Unit) =
     component(c, EditText::create, init)
+
+@LithoMarker
+fun empty(c: ComponentContext, init: EmptyComponent.Builder.() -> Unit) =
+    component(c, EmptyComponent::create, init)
+
+@LithoMarker
+fun ChildHolder.empty(c: ComponentContext, init: EmptyComponent.Builder.() -> Unit) =
+    component(c, EmptyComponent::create, init)
+
+@LithoMarker
+fun horizontalScroll(c: ComponentContext, init: HorizontalScroll.Builder.() -> Unit) =
+    component(c, HorizontalScroll::create, init)
 
 @LithoMarker
 fun ChildHolder.horizontalScroll(c: ComponentContext, init: HorizontalScroll.Builder.() -> Unit) =
     component(c, HorizontalScroll::create, init)
 
 @LithoMarker
+fun image(c: ComponentContext, init: Image.Builder.() -> Unit) =
+    component(c, Image::create, init)
+
+@LithoMarker
 fun ChildHolder.image(c: ComponentContext, init: Image.Builder.() -> Unit) =
     component(c, Image::create, init)
+
+@LithoMarker
+fun lazySelector(c: ComponentContext, init: LazySelectorComponent.Builder.() -> Unit) =
+    component(c, LazySelectorComponent::create, init)
+
+@LithoMarker
+fun ChildHolder.progress(c: ComponentContext, init: Progress.Builder.() -> Unit) =
+    component(c, Progress::create, init)
+
+@LithoMarker
+fun progress(c: ComponentContext, init: Progress.Builder.() -> Unit) =
+    component(c, Progress::create, init)
+
+@LithoMarker
+fun ChildHolder.lazySelector(c: ComponentContext, init: LazySelectorComponent.Builder.() -> Unit) =
+    component(c, LazySelectorComponent::create, init)
+
+@LithoMarker
+fun recycler(c: ComponentContext, init: Recycler.Builder.() -> Unit) =
+    component(c, Recycler::create, init)
 
 @LithoMarker
 fun ChildHolder.recycler(c: ComponentContext, init: Recycler.Builder.() -> Unit) =
     component(c, Recycler::create, init)
 
 @LithoMarker
+fun recyclerCollectionComponent(c: ComponentContext,
+                                init: RecyclerCollectionComponent.Builder.() -> Unit) =
+    component(c, RecyclerCollectionComponent::create, init)
+
+@LithoMarker
+fun ChildHolder.recyclerCollectionComponent(c: ComponentContext,
+                                            init: RecyclerCollectionComponent.Builder.() -> Unit) =
+    component(c, RecyclerCollectionComponent::create, init)
+
+@LithoMarker
+fun selector(c: ComponentContext, init: SelectorComponent.Builder.() -> Unit) =
+    component(c, SelectorComponent::create, init)
+
+@LithoMarker
+fun ChildHolder.selector(c: ComponentContext, init: SelectorComponent.Builder.() -> Unit) =
+    component(c, SelectorComponent::create, init)
+
+@LithoMarker
+fun solidColor(c: ComponentContext, init: SolidColor.Builder.() -> Unit) =
+    component(c, SolidColor::create, init)
+
+@LithoMarker
 fun ChildHolder.solidColor(c: ComponentContext, init: SolidColor.Builder.() -> Unit) =
     component(c, SolidColor::create, init)
 
 @LithoMarker
+fun text(c: ComponentContext, init: Text.Builder.() -> Unit) =
+    component(c, Text::create, init)
+
+@LithoMarker
 fun ChildHolder.text(c: ComponentContext, init: Text.Builder.() -> Unit) =
     component(c, Text::create, init)
+
+@LithoMarker
+fun verticalScroll(c: ComponentContext, init: VerticalScroll.Builder.() -> Unit) =
+    component(c, VerticalScroll::create, init)
 
 @LithoMarker
 fun ChildHolder.verticalScroll(c: ComponentContext, init: VerticalScroll.Builder.() -> Unit) =
