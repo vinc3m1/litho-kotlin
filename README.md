@@ -26,7 +26,7 @@ I may look into a proper Maven Central release in the future, but it's just one 
 object ExampleComponentSpec {
 
   @OnCreateLayout
-  fun onCreateLayout(c: ComponentContext): ComponentLayout {
+  fun onCreateLayout(c: ComponentContext): Component {
     return column(c) {               // Init builders by passing in the context
       paddingDip(YogaEdge.ALL, 8f)   // Attributes can be defined inline within the lambda
       child(text(c) {                // Children can be added individually...
