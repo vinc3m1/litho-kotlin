@@ -24,7 +24,7 @@ annotation class LithoMarker
 
 /** A concrete class to help scope the DSL. */
 class ChildHolder {
-  val children = mutableListOf<Any>()
+  val children = mutableListOf<Component.Builder<*>>()
 }
 
 /**
@@ -34,7 +34,7 @@ class ChildHolder {
  * @param init the DSL builder lambda.
  */
 @LithoMarker
-fun <B : Component.Builder<B>> component(
+fun <B : Component.Builder<B>> componentBuilder(
     c: ComponentContext,
     create: (c: ComponentContext) -> B,
     init: B.() -> Unit): Component.Builder<B> {
@@ -50,7 +50,7 @@ fun <B : Component.Builder<B>> component(
  * @param init the DSL builder lambda.
  */
 @LithoMarker
-fun <B : Component.Builder<B>> ChildHolder.component(
+fun <B : Component.Builder<B>> ChildHolder.componentBuilder(
     c: ComponentContext,
     create: (c: ComponentContext) -> B,
     init: B.() -> Unit) {
@@ -69,14 +69,7 @@ fun <B : Component.ContainerBuilder<B>> Component.ContainerBuilder<B>.children(
   val childHolder = ChildHolder()
   childHolder.init()
   for (child in childHolder.children) {
-    when (child) {
-      is Component -> {
-        this.child(child)
-      }
-      is Component.Builder<*> -> {
-        this.child(child)
-      }
-    }
+    this.child(child)
   }
 }
 
@@ -84,132 +77,132 @@ fun <B : Component.ContainerBuilder<B>> Component.ContainerBuilder<B>.children(
 
 @LithoMarker
 fun column(c: ComponentContext, init: Column.Builder.() -> Unit) =
-    component(c, Column::create, init)
+    componentBuilder(c, Column::create, init)
 
 @LithoMarker
 fun ChildHolder.column(c: ComponentContext, init: Column.Builder.() -> Unit) =
-    component(c, Column::create, init)
+    componentBuilder(c, Column::create, init)
 
 @LithoMarker
 fun row(c: ComponentContext, init: Row.Builder.() -> Unit) =
-    component(c, Row::create, init)
+    componentBuilder(c, Row::create, init)
 
 @LithoMarker
 fun ChildHolder.row(c: ComponentContext, init: Row.Builder.() -> Unit) =
-    component(c, Row::create, init)
+    componentBuilder(c, Row::create, init)
 
 /** Components */
 
 @LithoMarker
 fun card(c: ComponentContext, init: Card.Builder.() -> Unit) =
-    component(c, Card::create, init)
+    componentBuilder(c, Card::create, init)
 
 @LithoMarker
 fun ChildHolder.card(c: ComponentContext, init: Card.Builder.() -> Unit) =
-    component(c, Card::create, init)
+    componentBuilder(c, Card::create, init)
 
 @LithoMarker
 fun cardClip(c: ComponentContext, init: CardClip.Builder.() -> Unit) =
-    component(c, CardClip::create, init)
+    componentBuilder(c, CardClip::create, init)
 
 @LithoMarker
 fun ChildHolder.cardClip(c: ComponentContext, init: CardClip.Builder.() -> Unit) =
-    component(c, CardClip::create, init)
+    componentBuilder(c, CardClip::create, init)
 
 @LithoMarker
 fun editText(c: ComponentContext, init: EditText.Builder.() -> Unit) =
-    component(c, EditText::create, init)
+    componentBuilder(c, EditText::create, init)
 
 @LithoMarker
 fun ChildHolder.editText(c: ComponentContext, init: EditText.Builder.() -> Unit) =
-    component(c, EditText::create, init)
+    componentBuilder(c, EditText::create, init)
 
 @LithoMarker
 fun empty(c: ComponentContext, init: EmptyComponent.Builder.() -> Unit) =
-    component(c, EmptyComponent::create, init)
+    componentBuilder(c, EmptyComponent::create, init)
 
 @LithoMarker
 fun ChildHolder.empty(c: ComponentContext, init: EmptyComponent.Builder.() -> Unit) =
-    component(c, EmptyComponent::create, init)
+    componentBuilder(c, EmptyComponent::create, init)
 
 @LithoMarker
 fun horizontalScroll(c: ComponentContext, init: HorizontalScroll.Builder.() -> Unit) =
-    component(c, HorizontalScroll::create, init)
+    componentBuilder(c, HorizontalScroll::create, init)
 
 @LithoMarker
 fun ChildHolder.horizontalScroll(c: ComponentContext, init: HorizontalScroll.Builder.() -> Unit) =
-    component(c, HorizontalScroll::create, init)
+    componentBuilder(c, HorizontalScroll::create, init)
 
 @LithoMarker
 fun image(c: ComponentContext, init: Image.Builder.() -> Unit) =
-    component(c, Image::create, init)
+    componentBuilder(c, Image::create, init)
 
 @LithoMarker
 fun ChildHolder.image(c: ComponentContext, init: Image.Builder.() -> Unit) =
-    component(c, Image::create, init)
+    componentBuilder(c, Image::create, init)
 
 @LithoMarker
 fun lazySelector(c: ComponentContext, init: LazySelectorComponent.Builder.() -> Unit) =
-    component(c, LazySelectorComponent::create, init)
+    componentBuilder(c, LazySelectorComponent::create, init)
 
 @LithoMarker
 fun ChildHolder.progress(c: ComponentContext, init: Progress.Builder.() -> Unit) =
-    component(c, Progress::create, init)
+    componentBuilder(c, Progress::create, init)
 
 @LithoMarker
 fun progress(c: ComponentContext, init: Progress.Builder.() -> Unit) =
-    component(c, Progress::create, init)
+    componentBuilder(c, Progress::create, init)
 
 @LithoMarker
 fun ChildHolder.lazySelector(c: ComponentContext, init: LazySelectorComponent.Builder.() -> Unit) =
-    component(c, LazySelectorComponent::create, init)
+    componentBuilder(c, LazySelectorComponent::create, init)
 
 @LithoMarker
 fun recycler(c: ComponentContext, init: Recycler.Builder.() -> Unit) =
-    component(c, Recycler::create, init)
+    componentBuilder(c, Recycler::create, init)
 
 @LithoMarker
 fun ChildHolder.recycler(c: ComponentContext, init: Recycler.Builder.() -> Unit) =
-    component(c, Recycler::create, init)
+    componentBuilder(c, Recycler::create, init)
 
 @LithoMarker
 fun recyclerCollectionComponent(c: ComponentContext,
                                 init: RecyclerCollectionComponent.Builder.() -> Unit) =
-    component(c, RecyclerCollectionComponent::create, init)
+    componentBuilder(c, RecyclerCollectionComponent::create, init)
 
 @LithoMarker
 fun ChildHolder.recyclerCollectionComponent(c: ComponentContext,
                                             init: RecyclerCollectionComponent.Builder.() -> Unit) =
-    component(c, RecyclerCollectionComponent::create, init)
+    componentBuilder(c, RecyclerCollectionComponent::create, init)
 
 @LithoMarker
 fun selector(c: ComponentContext, init: SelectorComponent.Builder.() -> Unit) =
-    component(c, SelectorComponent::create, init)
+    componentBuilder(c, SelectorComponent::create, init)
 
 @LithoMarker
 fun ChildHolder.selector(c: ComponentContext, init: SelectorComponent.Builder.() -> Unit) =
-    component(c, SelectorComponent::create, init)
+    componentBuilder(c, SelectorComponent::create, init)
 
 @LithoMarker
 fun solidColor(c: ComponentContext, init: SolidColor.Builder.() -> Unit) =
-    component(c, SolidColor::create, init)
+    componentBuilder(c, SolidColor::create, init)
 
 @LithoMarker
 fun ChildHolder.solidColor(c: ComponentContext, init: SolidColor.Builder.() -> Unit) =
-    component(c, SolidColor::create, init)
+    componentBuilder(c, SolidColor::create, init)
 
 @LithoMarker
 fun text(c: ComponentContext, init: Text.Builder.() -> Unit) =
-    component(c, Text::create, init)
+    componentBuilder(c, Text::create, init)
 
 @LithoMarker
 fun ChildHolder.text(c: ComponentContext, init: Text.Builder.() -> Unit) =
-    component(c, Text::create, init)
+    componentBuilder(c, Text::create, init)
 
 @LithoMarker
 fun verticalScroll(c: ComponentContext, init: VerticalScroll.Builder.() -> Unit) =
-    component(c, VerticalScroll::create, init)
+    componentBuilder(c, VerticalScroll::create, init)
 
 @LithoMarker
 fun ChildHolder.verticalScroll(c: ComponentContext, init: VerticalScroll.Builder.() -> Unit) =
-    component(c, VerticalScroll::create, init)
+    componentBuilder(c, VerticalScroll::create, init)
