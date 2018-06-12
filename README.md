@@ -43,8 +43,8 @@ object ExampleComponentSpec {
           textSizeDip(16f)
         }
       }
-    }
-  }.build()                          // Don't forget to call build()!
+    }.build()                        // Don't forget to call build()!
+  }
 
 }
 ```
