@@ -4,7 +4,7 @@ Kotlin DSL for [Litho](https://fblitho.com) `Component.Builder`s.
 # Usage
 
 ## Import
-1. Copy [`litho.kt`](https://raw.githubusercontent.com/vinc3m1/litho-kotlin/master/src/main/kotlin/com/makeramen/litho/litho.kt) into your project under `com/makeramen/litho`.
+1. Copy [`Litho.kt`](https://raw.githubusercontent.com/vinc3m1/litho-kotlin/master/src/main/kotlin/com/makeramen/litho/Litho.kt) into your project under `com/makeramen/litho`.
 2. Add any definitions for your own custom components, e.g.
     ```kotlin
     @LithoMarker
