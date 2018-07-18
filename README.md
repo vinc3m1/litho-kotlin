@@ -27,24 +27,19 @@ object ExampleComponentSpec {
 
   @OnCreateLayout
   fun onCreateLayout(c: ComponentContext): Component {
-    return column(c) {               // Init builders by passing in the context
+    return column(c) {               // Init root Components by passing in the context
       paddingDip(YogaEdge.ALL, 8f)   // Attributes can be defined inline within the lambda
-      child(text(c) {                // Children can be added individually...
-        text("ONE")
-        textSizeDip(16f)
-      })
-      children {                     // ...or grouped into a children element
-        text(c) {
+      children {                     // Add children using a children element
+        text {                       // ComponentBuilders within a children element don't need a context
           text("TWO")
           textSizeDip(16f)
         }
-        text(c) {
+        text {
           text("THREE")
           textSizeDip(16f)
         }
       }
-    }.build()                        // Don't forget to call build()!
+    }
   }
-
 }
 ```
